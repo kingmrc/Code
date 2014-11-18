@@ -274,10 +274,10 @@ void batteryLCD(){//displaysbatterylevels on LCD
 		}
 	}
 }
-void calJoy(){//recalibrates joystick by saving values while joystick is released
+void calJoy(delay = 0){//recalibrates joystick by saving values while joystick is released
 	clearLCDLine(1);
 	displayLCDString(1, 0, "joyCal: Waiting");
-	delay(2000);
+	wait1Msec(delay);
 	if (abs(vexRT[Ch4]) < 30 && abs(vexRT[Ch3]) < 30)
 	{
 		joy1X = vexRT[Ch4];
