@@ -44,6 +44,7 @@ void halt(){//stops all movement
 	motor[armMotorR1] = 0;
 	motor[armMotorR2] = 0;
 	motor[clawMotor] = 0;
+	motor[rollerMotor] = 0;
 }
 void forward(int cm, int speed = 63){//forward for designated distance
 	clear();
@@ -575,7 +576,7 @@ task autonomous(){//Autonomous block begin
 		break;
 	case 5://programming skills
 		clearLCDLine(1);
-		/*		right(75,10350);   //strafe right
+	/*right(75,10350);   //strafe right
 		halt();
 		backward(600,100);
 		halt();
@@ -747,10 +748,10 @@ task usercontrol(){//Usercontrol block begin
 		motor[armMotorR2] = vexRT[Ch2Xmtr2];
 		motor[rollerMotor] = vexRT[Ch3Xmtr2];
 		if (vexRT[Btn6UXmtr2] == 1){
-			motor[clawMotor] = 75;
+			motor[clawMotor] = 127;
 		}
 		else if (vexRT[Btn6DXmtr2] == 1){
-			motor[clawMotor] = -75;
+			motor[clawMotor] = -127;
 		}
 		else{
 			motor[clawMotor] = 0;
