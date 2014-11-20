@@ -714,10 +714,10 @@ task usercontrol(){//Usercontrol block begin
 			else{
 				gY = (-vexRT[AccelY]*2);
 			}
-			motor[leftMotorF] = (gY + gX);
-			motor[leftMotorR] = (gY + gX);
-			motor[rightMotorF] = (gY - gX);
-			motor[rightMotorR] = (gY - gX);
+			motor[leftMotorF] = (gY - gX);
+			motor[leftMotorR] = (gY - gX);
+			motor[rightMotorF] = (gY + gX);
+			motor[rightMotorR] = (gY + gX);
 		}
 		else{
 			motor[leftMotorF] = vexRT[Ch3] - joy1Y;
