@@ -191,7 +191,7 @@ void turnRightPlaceDegrees(int degrees, int speed = 63){//turns right in one pla
 	motor[armMotorR2] = 0;
 	halt();
 }
-void turnRightArc(int cm, int speed = 63){//see above, but movesforward while turning
+void turnRightArc(int cm, int speed = 63){//see above, but moves forward while turning
 	clear();
 	dist = cm / 19.9580298637;
 	while (nMotorEncoder[leftMotorR]>-dist && nMotorEncoder[rightMotorR]>-(dist/2)){
@@ -259,16 +259,13 @@ void batteryLCD(){//displaysbatterylevels on LCD
 			ExpanderBatteryLevel = SensorValue[ExpanderBattery] / 7;
 			clearLCDLine(0);
 			displayLCDString(0, 0, "Secondary: ");
-			if (ExpanderBatteryLevel < 550)
-			{
+			if (ExpanderBatteryLevel < 550){
 				displayNextLCDString("Replace");
 			}
-			else if (ExpanderBatteryLevel < 650)
-			{
+			else if (ExpanderBatteryLevel < 650){
 				displayNextLCDString("Low");
 			}
-			else
-			{
+			else{
 				displayNextLCDString("Good");
 			}
 			break;
@@ -279,13 +276,11 @@ void calJoy(int wait = 0){//recalibrates joystick by saving values while joystic
 	clearLCDLine(1);
 	displayLCDString(1, 0, "joyCal: Waiting");
 	wait1Msec(wait);
-	if (abs(vexRT[Ch4]) < 30 && abs(vexRT[Ch3]) < 30)
-	{
+	if (abs(vexRT[Ch4]) < 30 && abs(vexRT[Ch3]) < 30){
 		joy1X = vexRT[Ch4];
 		joy1Y = vexRT[Ch3];
 	}
-	if (abs(vexRT[Ch1]) < 30 && abs(vexRT[Ch2]) < 30)
-	{
+	if (abs(vexRT[Ch1]) < 30 && abs(vexRT[Ch2]) < 30){
 		joy2X = vexRT[Ch1];
 		joy2Y = vexRT[Ch2];
 	}
