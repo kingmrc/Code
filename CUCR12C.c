@@ -274,10 +274,10 @@ void batteryLCD(){//displaysbatterylevels on LCD
 		}
 	}
 }
-void calJoy(delay = 0){//recalibrates joystick by saving values while joystick is released
+void calJoy(int wait = 0){//recalibrates joystick by saving values while joystick is released
 	clearLCDLine(1);
 	displayLCDString(1, 0, "joyCal: Waiting");
-	wait1Msec(delay);
+	wait1Msec(wait);
 	if (abs(vexRT[Ch4]) < 30 && abs(vexRT[Ch3]) < 30)
 	{
 		joy1X = vexRT[Ch4];
@@ -689,7 +689,7 @@ task usercontrol(){//Usercontrol block begin
 			halt();
 			calJoy();
 		}
-		else if (vexRT[Btn8U] == 1){
+		/*else if (vexRT[Btn8U] == 1){
 			if (batteryLCDBool == true){
 				batteryLCDBool = false;
 				wait1Msec(500);
@@ -698,7 +698,7 @@ task usercontrol(){//Usercontrol block begin
 				batteryLCDBool = true;
 				wait1Msec(500);
 			}
-		}
+		}*/
 		else if (vexRT[Btn6D] == 1){
 			if (-vexRT[AccelX]*2 > 127){
 				gX = 127;
