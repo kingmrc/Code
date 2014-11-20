@@ -293,148 +293,110 @@ void calJoy(delay = 0){//recalibrates joystick by saving values while joystick i
 void pre_auton(){//Pre-Autonomous block begin
 	//calJoy();
 	clear();
-	while (bIfiRobotDisabled)//outputs true when robot is disabled, ends subroutine when autonomous starts
-	{
+	while (bIfiRobotDisabled){//outputs true when robot is disabled, ends subroutine when autonomous starts
 		displayLCDString(1, 0, "<<");
 		displayLCDString(1, 14, ">>");
-		switch(auton)
-		{
+		switch(auton){
 		case 1://red autoloader
 			displayLCDCenteredString(0, "Red Loader");
-			if (nLCDButtons == 1)
-			{
-				while (nLCDButtons == 1)
-				{
+			if (nLCDButtons == 1){
+				while (nLCDButtons == 1){
 				}
 				auton = 6;
 			}
-			else
-			{
+			else{
 			}
-			if (nLCDButtons == 4)
-			{
-				while (nLCDButtons == 4)
-				{
+			if (nLCDButtons == 4){
+				while (nLCDButtons == 4){
 				}
 				auton = 2;
 			}
-			else
-			{
+			else{
 			}
 			break;
 		case 2://red posts
 			displayLCDCenteredString(0, "Red Posts");
-			if (nLCDButtons == 1)
-			{
-				while (nLCDButtons == 1)
-				{
+			if (nLCDButtons == 1){
+				while (nLCDButtons == 1){
 				}
 				auton = 1;
 			}
-			else
-			{
+			else{
 			}
-			if (nLCDButtons == 4)
-			{
-				while (nLCDButtons == 4)
-				{
+			if (nLCDButtons == 4){
+				while (nLCDButtons == 4){
 				}
 				auton = 3;
 			}
-			else
-			{
+			else{
 			}
 			break;
 		case 3://blue autoloader
 			displayLCDCenteredString(0, "Blue Loader");
-			if (nLCDButtons == 1)
-			{
-				while (nLCDButtons == 1)
-				{
+			if (nLCDButtons == 1){
+				while (nLCDButtons == 1){
 				}
 				auton = 2;
 			}
-			else
-			{
+			else{
 			}
-			if (nLCDButtons == 4)
-			{
-				while (nLCDButtons == 4)
-				{
+			if (nLCDButtons == 4){
+				while (nLCDButtons == 4){
 				}
 				auton = 4;
 			}
-			else
-			{
+			else{
 			}
 			break;
 		case 4://blue posts
 			displayLCDCenteredString(0, "Blue Posts");
-			if (nLCDButtons == 1)
-			{
-				while (nLCDButtons == 1)
-				{
+			if (nLCDButtons == 1){
+				while (nLCDButtons == 1){
 				}
 				auton = 3;
 			}
-			else
-			{
+			else{
 			}
-			if (nLCDButtons == 4)
-			{
-				while (nLCDButtons == 4)
-				{
+			if (nLCDButtons == 4){
+				while (nLCDButtons == 4){
 				}
 				auton = 5;
 			}
-			else
-			{
+			else{
 			}
 			break;
 		case 5://Programming skills
 			displayLCDCenteredString(0, "Pr Skills");
-			if (nLCDButtons == 1)
-			{
-				while (nLCDButtons == 1)
-				{
+			if (nLCDButtons == 1){
+				while (nLCDButtons == 1){
 				}
 				auton = 4;
 			}
-			else
-			{
+			else{
 			}
-			if (nLCDButtons == 4)
-			{
-				while (nLCDButtons == 4)
-				{
+			if (nLCDButtons == 4){
+				while (nLCDButtons == 4){
 				}
 				auton = 6;
 			}
-			else
-			{
+			else{
 			}
 			break;
 		case 6://Worst-case scenario
 			displayLCDCenteredString(0, "Worst Case");
-			if (nLCDButtons == 1)
-			{
-				while (nLCDButtons == 1)
-				{
+			if (nLCDButtons == 1){
+				while (nLCDButtons == 1){
 				}
 				auton = 5;
 			}
-			else
-			{
+			else{
 			}
-			if (nLCDButtons == 4)
-			{
-				while (nLCDButtons == 4)
-				{
+			if (nLCDButtons == 4){
+				while (nLCDButtons == 4){
 				}
 				auton = 1;
 			}
-			else
-			{
+			else{
 			}
 			break;
 		}
@@ -442,8 +404,7 @@ void pre_auton(){//Pre-Autonomous block begin
 }//Pre-autonomous block end
 task autonomous(){//Autonomous block begin
 	clearLCDLine(1);
-	switch(auton)
-	{
+	switch(auton){
 	case 1://red autoloader
 		clearLCDLine(1);
 		left(75,10350);   //strafe left
