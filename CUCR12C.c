@@ -21,10 +21,14 @@
 #include "Vex_Competition_Includes.c"
 //Function-variable creation begin
 int dist;//distance, used by encoded movement functions
-int joy1X = 0;//used for recalibration of left joystick
-int joy1Y = 0;//see above
-int joy2X = 0;//used for recalibration of right joystick
-int joy2Y = 0;//see above
+int joy1X = 0;//used for recalibration of joysticks
+int joy1Y = 0;
+int joy2X = 0;
+int joy2Y = 0;
+int joy3X = 0;
+int joy3Y = 0;
+int joy4X = 0;
+int joy4Y = 0;//see above
 int gX = 0;//used for gyroscope threshold
 int gY = 0;//see above
 int auton = 1;//used to select automomous code with a switch-case
@@ -252,6 +256,14 @@ void calJoy(int wait = 0){//recalibrates joystick by saving values while joystic
 	if (abs(vexRT[Ch1]) < 30 && abs(vexRT[Ch2]) < 30){
 		joy2X = vexRT[Ch1];
 		joy2Y = vexRT[Ch2];
+	}
+	if (abs(vexRT[Ch4Xmtr2]) < 30 && abs(vexRT[Ch3Xmtr2]) < 30){
+		joy3X = vexRT[Ch4Xmtr2];
+		joy3Y = vexRT[Ch3Xmtr2];
+	}
+	if (abs(vexRT[Ch1Xmtr2]) < 30 && abs(vexRT[Ch2Xmtr2]) < 30){
+		joy4X = vexRT[Ch1Xmtr2];
+		joy4Y = vexRT[Ch2Xmtr2];
 	}
 	clearLCDLine(1);
 }//Function-variable creation end
@@ -638,12 +650,12 @@ task usercontrol(){//Usercontrol block begin
 	clearTimer(T1);
 	while (true){
 		batteryLCD();
-		if (vexRT[Btn8D]==1){
-			halt();
+		if (vexRT[Btn8D]==1||nLCDButtons==2){
+			halt(2);
 		}
-		else if (nLCDButtons==2){
-			halt();
-		}
+		/*else if (nLCDButtons==2){
+			halt(2);
+		}*/
 		else if (vexRT[Btn5U] == 1){
 			left(127);
 		}
@@ -706,11 +718,11 @@ task usercontrol(){//Usercontrol block begin
 			else{
 			}
 		}
-		motor[armMotorL1] = -vexRT[Ch2Xmtr2];
-		motor[armMotorL2] = -vexRT[Ch2Xmtr2];
-		motor[armMotorR1] = -vexRT[Ch2Xmtr2];
-		motor[armMotorR2] = -vexRT[Ch2Xmtr2];
-		motor[rollerMotor] = -vexRT[Ch3Xmtr2];
+		motor[armMotorL1] = -vexRT[Ch2Xmtr2] - joy4Y;
+		motor[armMotorL2] = -vexRT[Ch2Xmtr2] - joy4Y;
+		motor[armMotorR1] = -vexRT[Ch2Xmtr2] - joy4Y;
+		motor[armMotorR2] = -vexRT[Ch2Xmtr2] - joy4Y;
+		motor[rollerMotor] = -vexRT[Ch3Xmtr2] - joy3Y;
 		if (vexRT[Btn6UXmtr2] == 1){
 			motor[clawMotor] = 127;
 		}
