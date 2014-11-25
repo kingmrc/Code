@@ -32,6 +32,7 @@ int joy4Y = 0;//see above
 int gX = 0;//used for gyroscope threshold
 int gY = 0;//see above
 int auton = 1;//used to select automomous code with a switch-case
+bool dgate = false;//used to select driverstyle for the arm
 int ExpanderBatteryLevel = 0;//used to display battery level of power expander, always displays "replace" for some reason
 bool batteryLCDBool = true;//used to select which battery level is displayed, defaults to primary
 void clear(){//resets encoders
@@ -40,7 +41,7 @@ void clear(){//resets encoders
 }
 void halt(int set = 0){//stops all movement
 	if (set==0||set==2)
-	motor[leftMotorF] = 0;
+		motor[leftMotorF] = 0;
 	motor[leftMotorR] = 0;
 	motor[rightMotorF] = 0;
 	motor[rightMotorR] = 0;
@@ -654,7 +655,7 @@ task usercontrol(){//Usercontrol block begin
 			halt(2);
 		}
 		/*else if (nLCDButtons==2){
-			halt(2);
+		halt(2);
 		}*/
 		else if (vexRT[Btn5U] == 1){
 			left(127);
@@ -718,11 +719,32 @@ task usercontrol(){//Usercontrol block begin
 			else{
 			}
 		}
-		motor[armMotorL1] = -vexRT[Ch2Xmtr2] - joy4Y;
-		motor[armMotorL2] = -vexRT[Ch2Xmtr2] - joy4Y;
-		motor[armMotorR1] = -vexRT[Ch2Xmtr2] - joy4Y;
-		motor[armMotorR2] = -vexRT[Ch2Xmtr2] - joy4Y;
-		motor[rollerMotor] = -vexRT[Ch3Xmtr2] - joy3Y;
+		switch(dgate){
+		case false:
+			motor[armMotorL1] = -vexRT[Ch2Xmtr2] - joy4Y;
+			motor[armMotorL2] = -vexRT[Ch2Xmtr2] - joy4Y;
+			motor[armMotorR1] = -vexRT[Ch2Xmtr2] - joy4Y;
+			motor[armMotorR2] = -vexRT[Ch2Xmtr2] - joy4Y;
+			motor[rollerMotor] = -vexRT[Ch3Xmtr2] - joy3Y;
+			if (vexRT[Btn7UXmtr2] == 1){
+				while (vexRT[Btn7UXmtr2] == 1){
+				}
+				dgate = true;
+			}
+			break;
+		case true:
+			motor[armMotorL1] = vexRT[Ch2Xmtr2] - joy4Y;
+			motor[armMotorL2] = vexRT[Ch2Xmtr2] - joy4Y;
+			motor[armMotorR1] = vexRT[Ch2Xmtr2] - joy4Y;
+			motor[armMotorR2] = vexRT[Ch2Xmtr2] - joy4Y;
+			motor[rollerMotor] = vexRT[Ch3Xmtr2] - joy3Y;
+			if (vexRT[Btn7UXmtr2] == 1){
+				while (vexRT[Btn7UXmtr2] == 1){
+				}
+				dgate = false;
+			}
+			break;
+		}
 		if (vexRT[Btn6UXmtr2] == 1){
 			motor[clawMotor] = 127;
 		}
