@@ -21,29 +21,38 @@
 #include "Vex_Competition_Includes.c"
 //Function-variable creation begin
 int dist;//distance, used by encoded movement functions
-int joy1X = 0;//used for recalibration of left joystick
-int joy1Y = 0;//see above
-int joy2X = 0;//used for recalibration of right joystick
-int joy2Y = 0;//see above
+int joy1X = 0;//used for recalibration of joysticks
+int joy1Y = 0;
+int joy2X = 0;
+int joy2Y = 0;
+int joy3X = 0;
+int joy3Y = 0;
+int joy4X = 0;
+int joy4Y = 0;//see above
 int gX = 0;//used for gyroscope threshold
 int gY = 0;//see above
 int auton = 1;//used to select automomous code with a switch-case
+bool dgate = false;//used to select driverstyle for the arm
 int ExpanderBatteryLevel = 0;//used to display battery level of power expander, always displays "replace" for some reason
 bool batteryLCDBool = true;//used to select which battery level is displayed, defaults to primary
 void clear(){//resets encoders
 	nMotorEncoder[leftMotorR] = 0;
 	nMotorEncoder[rightMotorR] = 0;
 }
-void halt(){//stops all movement
-	motor[leftMotorF] = 0;
+void halt(int set = 0){//stops all movement
+	if (set==0||set==2)
+		motor[leftMotorF] = 0;
 	motor[leftMotorR] = 0;
 	motor[rightMotorF] = 0;
 	motor[rightMotorR] = 0;
-	motor[armMotorL1] = 0;
-	motor[armMotorL2] = 0;
-	motor[armMotorR1] = 0;
-	motor[armMotorR2] = 0;
 	motor[clawMotor] = 0;
+	motor[rollerMotor] = 0;
+	if (set==1||set==2){
+		motor[armMotorL1] = 0;
+		motor[armMotorL2] = 0;
+		motor[armMotorR1] = 0;
+		motor[armMotorR2] = 0;
+	}
 }
 void forward(int cm, int speed = 63){//forward for designated distance
 	clear();
@@ -54,11 +63,7 @@ void forward(int cm, int speed = 63){//forward for designated distance
 		motor[rightMotorF] = speed;
 		motor[rightMotorR] = speed;
 	}
-	motor[armMotorL1] = 0;
-	motor[armMotorL2] = 0;
-	motor[armMotorR1] = 0;
-	motor[armMotorR2] = 0;
-	halt();
+	halt(1);
 }
 void backward(int cm, int speed = 63){//see above, but moves backwards
 	clear();
@@ -124,11 +129,7 @@ void turnLeftPlace(int cm, int speed = 127){//turns left in one place
 		motor[rightMotorF] = speed;
 		motor[rightMotorR] = speed;
 	}
-	motor[armMotorL1] = 0;
-	motor[armMotorL2] = 0;
-	motor[armMotorR1] = 0;
-	motor[armMotorR2] = 0;
-	halt();
+	halt(1);
 }
 void turnLeftPlaceDegrees(int degrees, int speed = 127){//turns left in one place
 	clear();
@@ -139,11 +140,7 @@ void turnLeftPlaceDegrees(int degrees, int speed = 127){//turns left in one plac
 		motor[rightMotorF] = speed;
 		motor[rightMotorR] = speed;
 	}
-	motor[armMotorL1] = 0;
-	motor[armMotorL2] = 0;
-	motor[armMotorR1] = 0;
-	motor[armMotorR2] = 0;
-	halt();
+	halt(1);
 }
 void turnLeftArc(int cm, int speed = 63){//see above, but moves forward while turning
 	clear();
@@ -154,11 +151,7 @@ void turnLeftArc(int cm, int speed = 63){//see above, but moves forward while tu
 		motor[rightMotorF] = speed;
 		motor[rightMotorR] = speed;
 	}
-	motor[armMotorL1] = 0;
-	motor[armMotorL2] = 0;
-	motor[armMotorR1] = 0;
-	motor[armMotorR2] = 0;
-	halt();
+	halt(1);
 }
 void turnRightPlace(int cm, int speed = 63){//turns right in one place
 	clear();
@@ -169,11 +162,7 @@ void turnRightPlace(int cm, int speed = 63){//turns right in one place
 		motor[rightMotorF] = -speed;
 		motor[rightMotorR] = -speed;
 	}
-	motor[armMotorL1] = 0;
-	motor[armMotorL2] = 0;
-	motor[armMotorR1] = 0;
-	motor[armMotorR2] = 0;
-	halt();
+	halt(1);
 }
 void turnRightPlaceDegrees(int degrees, int speed = 63){//turns right in one place
 	clear();
@@ -184,13 +173,9 @@ void turnRightPlaceDegrees(int degrees, int speed = 63){//turns right in one pla
 		motor[rightMotorF] = -speed;
 		motor[rightMotorR] = -speed;
 	}
-	motor[armMotorL1] = 0;
-	motor[armMotorL2] = 0;
-	motor[armMotorR1] = 0;
-	motor[armMotorR2] = 0;
-	halt();
+	halt(1);
 }
-void turnRightArc(int cm, int speed = 63){//see above, but movesforward while turning
+void turnRightArc(int cm, int speed = 63){//see above, but moves forward while turning
 	clear();
 	dist = cm / 19.9580298637;
 	while (nMotorEncoder[leftMotorR]>-dist && nMotorEncoder[rightMotorR]>-(dist/2)){
@@ -199,11 +184,7 @@ void turnRightArc(int cm, int speed = 63){//see above, but movesforward while tu
 		motor[rightMotorF] = (speed/2);
 		motor[rightMotorR] = (speed/2);
 	}
-	motor[armMotorL1] = 0;
-	motor[armMotorL2] = 0;
-	motor[armMotorR1] = 0;
-	motor[armMotorR2] = 0;
-	halt();
+	halt(1);
 }
 void raiseArm(int time, int speed = 63){//raises arm
 	motor[armMotorL1] = -speed;
@@ -226,12 +207,6 @@ void openClaw(int time, int speed = 63){//opens claw
 void closeClaw(int time,int speed = 63){//closes claw
 	motor[clawMotor] = -speed;
 	wait1Msec(time);
-}
-void haltArm(){//stops arm
-	motor[armMotorL1] = 0;
-	motor[armMotorL2] = 0;
-	motor[armMotorR1] = 0;
-	motor[armMotorR2] = 0;
 }
 void batteryLCD(){//displaysbatterylevels on LCD
 	if (time1[T1]%100 == 0)
@@ -258,183 +233,148 @@ void batteryLCD(){//displaysbatterylevels on LCD
 			ExpanderBatteryLevel = SensorValue[ExpanderBattery] / 7;
 			clearLCDLine(0);
 			displayLCDString(0, 0, "Secondary: ");
-			if (ExpanderBatteryLevel < 550)
-			{
+			if (ExpanderBatteryLevel < 550){
 				displayNextLCDString("Replace");
 			}
-			else if (ExpanderBatteryLevel < 650)
-			{
+			else if (ExpanderBatteryLevel < 650){
 				displayNextLCDString("Low");
 			}
-			else
-			{
+			else{
 				displayNextLCDString("Good");
 			}
 			break;
 		}
 	}
 }
-void calJoy(){//recalibrates joystick by saving values while joystick is released
+void calJoy(int wait = 0){//recalibrates joystick by saving values while joystick is released
 	clearLCDLine(1);
 	displayLCDString(1, 0, "joyCal: Waiting");
-	delay(2000);
-	if (abs(vexRT[Ch4]) < 30 && abs(vexRT[Ch3]) < 30)
-	{
+	wait1Msec(wait);
+	if (abs(vexRT[Ch4]) < 30 && abs(vexRT[Ch3]) < 30){
 		joy1X = vexRT[Ch4];
 		joy1Y = vexRT[Ch3];
 	}
-	if (abs(vexRT[Ch1]) < 30 && abs(vexRT[Ch2]) < 30)
-	{
+	if (abs(vexRT[Ch1]) < 30 && abs(vexRT[Ch2]) < 30){
 		joy2X = vexRT[Ch1];
 		joy2Y = vexRT[Ch2];
+	}
+	if (abs(vexRT[Ch4Xmtr2]) < 30 && abs(vexRT[Ch3Xmtr2]) < 30){
+		joy3X = vexRT[Ch4Xmtr2];
+		joy3Y = vexRT[Ch3Xmtr2];
+	}
+	if (abs(vexRT[Ch1Xmtr2]) < 30 && abs(vexRT[Ch2Xmtr2]) < 30){
+		joy4X = vexRT[Ch1Xmtr2];
+		joy4Y = vexRT[Ch2Xmtr2];
 	}
 	clearLCDLine(1);
 }//Function-variable creation end
 void pre_auton(){//Pre-Autonomous block begin
 	//calJoy();
 	clear();
-	while (bIfiRobotDisabled)//outputs true when robot is disabled, ends subroutine when autonomous starts
-	{
+	while (bIfiRobotDisabled){//outputs true when robot is disabled, ends subroutine when autonomous starts
 		displayLCDString(1, 0, "<<");
 		displayLCDString(1, 14, ">>");
-		switch(auton)
-		{
+		switch(auton){
 		case 1://red autoloader
 			displayLCDCenteredString(0, "Red Loader");
-			if (nLCDButtons == 1)
-			{
-				while (nLCDButtons == 1)
-				{
+			if (nLCDButtons == 1){
+				while (nLCDButtons == 1){
 				}
 				auton = 6;
 			}
-			else
-			{
+			else{
 			}
-			if (nLCDButtons == 4)
-			{
-				while (nLCDButtons == 4)
-				{
+			if (nLCDButtons == 4){
+				while (nLCDButtons == 4){
 				}
 				auton = 2;
 			}
-			else
-			{
+			else{
 			}
 			break;
 		case 2://red posts
 			displayLCDCenteredString(0, "Red Posts");
-			if (nLCDButtons == 1)
-			{
-				while (nLCDButtons == 1)
-				{
+			if (nLCDButtons == 1){
+				while (nLCDButtons == 1){
 				}
 				auton = 1;
 			}
-			else
-			{
+			else{
 			}
-			if (nLCDButtons == 4)
-			{
-				while (nLCDButtons == 4)
-				{
+			if (nLCDButtons == 4){
+				while (nLCDButtons == 4){
 				}
 				auton = 3;
 			}
-			else
-			{
+			else{
 			}
 			break;
 		case 3://blue autoloader
 			displayLCDCenteredString(0, "Blue Loader");
-			if (nLCDButtons == 1)
-			{
-				while (nLCDButtons == 1)
-				{
+			if (nLCDButtons == 1){
+				while (nLCDButtons == 1){
 				}
 				auton = 2;
 			}
-			else
-			{
+			else{
 			}
-			if (nLCDButtons == 4)
-			{
-				while (nLCDButtons == 4)
-				{
+			if (nLCDButtons == 4){
+				while (nLCDButtons == 4){
 				}
 				auton = 4;
 			}
-			else
-			{
+			else{
 			}
 			break;
 		case 4://blue posts
 			displayLCDCenteredString(0, "Blue Posts");
-			if (nLCDButtons == 1)
-			{
-				while (nLCDButtons == 1)
-				{
+			if (nLCDButtons == 1){
+				while (nLCDButtons == 1){
 				}
 				auton = 3;
 			}
-			else
-			{
+			else{
 			}
-			if (nLCDButtons == 4)
-			{
-				while (nLCDButtons == 4)
-				{
+			if (nLCDButtons == 4){
+				while (nLCDButtons == 4){
 				}
 				auton = 5;
 			}
-			else
-			{
+			else{
 			}
 			break;
 		case 5://Programming skills
 			displayLCDCenteredString(0, "Pr Skills");
-			if (nLCDButtons == 1)
-			{
-				while (nLCDButtons == 1)
-				{
+			if (nLCDButtons == 1){
+				while (nLCDButtons == 1){
 				}
 				auton = 4;
 			}
-			else
-			{
+			else{
 			}
-			if (nLCDButtons == 4)
-			{
-				while (nLCDButtons == 4)
-				{
+			if (nLCDButtons == 4){
+				while (nLCDButtons == 4){
 				}
 				auton = 6;
 			}
-			else
-			{
+			else{
 			}
 			break;
 		case 6://Worst-case scenario
 			displayLCDCenteredString(0, "Worst Case");
-			if (nLCDButtons == 1)
-			{
-				while (nLCDButtons == 1)
-				{
+			if (nLCDButtons == 1){
+				while (nLCDButtons == 1){
 				}
 				auton = 5;
 			}
-			else
-			{
+			else{
 			}
-			if (nLCDButtons == 4)
-			{
-				while (nLCDButtons == 4)
-				{
+			if (nLCDButtons == 4){
+				while (nLCDButtons == 4){
 				}
 				auton = 1;
 			}
-			else
-			{
+			else{
 			}
 			break;
 		}
@@ -442,8 +382,7 @@ void pre_auton(){//Pre-Autonomous block begin
 }//Pre-autonomous block end
 task autonomous(){//Autonomous block begin
 	clearLCDLine(1);
-	switch(auton)
-	{
+	switch(auton){
 	case 1://red autoloader
 		clearLCDLine(1);
 		left(75,10350);   //strafe left
@@ -614,7 +553,7 @@ task autonomous(){//Autonomous block begin
 		break;
 	case 5://programming skills
 		clearLCDLine(1);
-		/*		right(75,10350);   //strafe right
+		/*right(75,10350);   //strafe right
 		halt();
 		backward(600,100);
 		halt();
@@ -700,7 +639,7 @@ task autonomous(){//Autonomous block begin
 		halt();
 		break;
 	}
-	while(bIfiAutonomousMode){//"catch"program while autonomous mode is active to stop auton code from looping
+	while(bIfiAutonomousMode){//"catch" program while autonomous mode is active to stop auton code from looping
 		halt();
 	}
 }//Autonomous block end
@@ -712,12 +651,12 @@ task usercontrol(){//Usercontrol block begin
 	clearTimer(T1);
 	while (true){
 		batteryLCD();
-		if (vexRT[Btn8D]==1){
-			halt();
+		if (vexRT[Btn8D]==1||nLCDButtons==2){
+			halt(2);
 		}
-		else if (nLCDButtons==2){
-			halt();
-		}
+		/*else if (nLCDButtons==2){
+		halt(2);
+		}*/
 		else if (vexRT[Btn5U] == 1){
 			left(127);
 		}
@@ -728,16 +667,16 @@ task usercontrol(){//Usercontrol block begin
 			halt();
 			calJoy();
 		}
-		else if (vexRT[Btn8U] == 1){
-			if (batteryLCDBool == true){
-				batteryLCDBool = false;
-				wait1Msec(500);
-			}
-			else if (batteryLCDBool == false){
-				batteryLCDBool = true;
-				wait1Msec(500);
-			}
+		/*else if (vexRT[Btn8U] == 1){
+		if (batteryLCDBool == true){
+		batteryLCDBool = false;
+		wait1Msec(500);
 		}
+		else if (batteryLCDBool == false){
+		batteryLCDBool = true;
+		wait1Msec(500);
+		}
+		}*/
 		else if (vexRT[Btn6D] == 1){
 			if (-vexRT[AccelX]*2 > 127){
 				gX = 127;
@@ -757,10 +696,10 @@ task usercontrol(){//Usercontrol block begin
 			else{
 				gY = (-vexRT[AccelY]*2);
 			}
-			motor[leftMotorF] = (gY + gX);
-			motor[leftMotorR] = (gY + gX);
-			motor[rightMotorF] = (gY - gX);
-			motor[rightMotorR] = (gY - gX);
+			motor[leftMotorF] = (gY - gX);
+			motor[leftMotorR] = (gY - gX);
+			motor[rightMotorF] = (gY + gX);
+			motor[rightMotorR] = (gY + gX);
 		}
 		else{
 			motor[leftMotorF] = vexRT[Ch3] - joy1Y;
@@ -780,16 +719,37 @@ task usercontrol(){//Usercontrol block begin
 			else{
 			}
 		}
-		motor[armMotorL1] = vexRT[Ch2Xmtr2];
-		motor[armMotorL2] = vexRT[Ch2Xmtr2];
-		motor[armMotorR1] = vexRT[Ch2Xmtr2];
-		motor[armMotorR2] = vexRT[Ch2Xmtr2];
-		motor[rollerMotor] = vexRT[Ch3Xmtr2];
+		switch(dgate){
+		case false:
+			motor[armMotorL1] = -vexRT[Ch2Xmtr2] - joy4Y;
+			motor[armMotorL2] = -vexRT[Ch2Xmtr2] - joy4Y;
+			motor[armMotorR1] = -vexRT[Ch2Xmtr2] - joy4Y;
+			motor[armMotorR2] = -vexRT[Ch2Xmtr2] - joy4Y;
+			motor[rollerMotor] = -vexRT[Ch3Xmtr2] - joy3Y;
+			if (vexRT[Btn7UXmtr2] == 1){
+				while (vexRT[Btn7UXmtr2] == 1){
+				}
+				dgate = true;
+			}
+			break;
+		case true:
+			motor[armMotorL1] = vexRT[Ch2Xmtr2] - joy4Y;
+			motor[armMotorL2] = vexRT[Ch2Xmtr2] - joy4Y;
+			motor[armMotorR1] = vexRT[Ch2Xmtr2] - joy4Y;
+			motor[armMotorR2] = vexRT[Ch2Xmtr2] - joy4Y;
+			motor[rollerMotor] = vexRT[Ch3Xmtr2] - joy3Y;
+			if (vexRT[Btn7UXmtr2] == 1){
+				while (vexRT[Btn7UXmtr2] == 1){
+				}
+				dgate = false;
+			}
+			break;
+		}
 		if (vexRT[Btn6UXmtr2] == 1){
-			motor[clawMotor] = 75;
+			motor[clawMotor] = 127;
 		}
 		else if (vexRT[Btn6DXmtr2] == 1){
-			motor[clawMotor] = -75;
+			motor[clawMotor] = -127;
 		}
 		else{
 			motor[clawMotor] = 0;
@@ -797,3 +757,4 @@ task usercontrol(){//Usercontrol block begin
 	}
 }
 //usercontrol block end
+//rubber band number: 14 per side
